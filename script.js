@@ -1,38 +1,51 @@
-const form = document.getElementById("quiz-form");
-const answers = Array.from(document.querySelectorAll(".answer"));
-const questionItems = document.querySelectorAll(".question-item");
-const alert = document.querySelector("#alert");
+const formulaireQuiz = document.getElementById("quiz-form");
+const inputsReponses = Array.from(document.querySelectorAll(".answer"));
+const elementsQuestions = document.querySelectorAll(".question-item");
+const boiteAlerte = document.querySelector("#alert");
+const alerteNul= document.querySelector("#alertNullite");
 
-form.addEventListener("submit", e => {
-  e.preventDefault();
+formulaireQuiz.addEventListener("submit", gererSoumissionFormulaire);
 
-  questionItems.forEach(questionItem => {
-    questionItem.classList.add("incorrect");
-    questionItem.classList.remove("correct");
+
+function gererSoumissionFormulaire(soumission) {
+  soumission.preventDefault();
+
+  elementsQuestions.forEach(elementQuestion => {
+    elementQuestion.classList.add("incorrect");
+    elementQuestion.classList.remove("correct");
   });
 
-  const checkedAnswers = answers.filter(answer => answer.checked);
 
-  checkedAnswers.forEach(answer => {
-    const isCorrect = answer.value === "true";
-    const questionItem = answer.closest(".question-item");
+  const reponsesSelectionnees = inputsReponses.filter(reponse => reponse.checked);
 
-    if (isCorrect) {
-      questionItem.classList.add("correct");
-      questionItem.classList.remove("incorrect");
+
+  reponsesSelectionnees.forEach(reponse => {
+    const estCorrecte = reponse.value === "true";
+    const elementQuestion = reponse.closest(".question-item");
+
+    if (estCorrecte) {
+      elementQuestion.classList.add("correct");
+      elementQuestion.classList.remove("incorrect");
     } else {
-      questionItem.classList.add("incorrect");
-      questionItem.classList.remove("correct");
+      elementQuestion.classList.add("incorrect");
+      elementQuestion.classList.remove("correct");
     }
 
-    const allTrue = checkedAnswers.every(answer => answer.value === "true");
-    const allAnswered = checkedAnswers.length === questionItems.length;
+    const toutesCorrectes = reponsesSelectionnees.every(reponse => reponse.value === "true");
+    const toutesFausses = reponsesSelectionnees.every(reponse => reponse.value === "false");
+    const toutesRepondues = reponsesSelectionnees.length === elementsQuestions.length;
 
-    if (allTrue && allAnswered) {
-      alert.classList.add("active");
+    if (toutesCorrectes && toutesRepondues) {
+      boiteAlerte.classList.add("active");
       setTimeout(() => {
-        alert.classList.remove("active");
+        boiteAlerte.classList.remove("active");
+      }, 1000);
+    }
+    if (toutesFausses && toutesRepondues) {
+      alerteNul.classList.add("active");
+      setTimeout(() => {
+        alerteNul.classList.remove("active");
       }, 1000);
     }
   });
-});
+};
